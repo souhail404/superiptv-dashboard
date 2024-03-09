@@ -7,6 +7,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Badge, IconButton } from '@mui/material';
 
 import { useLogout } from '../hooks/useLogout';
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -52,7 +54,9 @@ const StyledMenu = styled((props) => (
 
 export default function CustomizedMenus() {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const { user } = useAuthContext()
   const {logout}= useLogout();
+  const navigate = useNavigate()
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,7 +86,7 @@ export default function CustomizedMenus() {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={()=>{handleClose(); navigate(`profile`)}} disableRipple>
           <PersonIcon />
           profile
         </MenuItem>

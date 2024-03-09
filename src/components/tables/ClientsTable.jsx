@@ -27,13 +27,13 @@ function ClientsTable() {
     const [customersData, setCustomersData] = useState([]); 
     const [search, setSearch] =useState('');
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(7);
+    const [pageSize, setPageSize] =useState(9);
     const [totalPg, setTotalPg] = useState();
     const [customersCount, setCustomersCount] = useState();
 
     const {user} = useAuthContext()
     const navigate = useNavigate()
-    const [serachValue]=useDebounce(search, 500) 
+    const [searchValue]=useDebounce(search, 500) 
 
     const deleteCustomer = async(customer, index)=>{
         const myheaders = new Headers();
@@ -108,7 +108,6 @@ function ClientsTable() {
     const getCustomers = async()=>{
         try{
             setIsFetching(true)
-            setPage(1)
             const res = await fetch(`/api/user?page=${page}&pageSize=${pageSize}&search=${search}&type=client`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -163,7 +162,11 @@ function ClientsTable() {
 
     useEffect(()=>{
         getCustomers()
-    },[page, serachValue])
+    },[page, searchValue])
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchValue]);
 
     return (
         <div className="table-wrapper1">

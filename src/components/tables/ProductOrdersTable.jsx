@@ -14,7 +14,7 @@ const ProductOrdersTable = ({product, productId, userId, exFetching, heading}) =
     const [ordersdata, setOrdersData] = useState();
     const [isFetching, setIsFetching] = useState(false)
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(11);
+    const [pageSize, setPageSize] =useState(7);
     const [totalPg, setTotalPg] = useState();
     const [ordersCount, setOrdersCount] = useState();
 
@@ -73,6 +73,10 @@ const ProductOrdersTable = ({product, productId, userId, exFetching, heading}) =
             getOrders()
         }
     },[page, product, productId, userId, exFetching])
+
+    useEffect(() => {
+        setPage(1);
+    }, [product, productId, userId, exFetching]);
 
     return (
         <div className="product-orders-container">

@@ -55,7 +55,6 @@ function SoldHistoryTable({userId ,exFetching}) {
     const getSoldHistory = async()=>{
         try{
             setIsFetching(true)
-            setPage(1)
             const res = await fetch(`/api/sold-history?page=${page}&pageSize=${pageSize}&userId=${userId}&paid=${isPaid}&type=${actionType}`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -84,6 +83,10 @@ function SoldHistoryTable({userId ,exFetching}) {
         }
         
     },[page, actionType, exFetching, isPaid])
+
+    useEffect(() => {
+        setPage(1);
+    }, [actionType, exFetching, isPaid]);
 
     return (
         <div className="table-wrapper1">

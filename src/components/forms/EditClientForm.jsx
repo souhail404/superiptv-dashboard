@@ -216,8 +216,8 @@ const IsLoyalField = (props) => {
     )
 }
 
-const EditClientForm = () => {
-    const {clientId} = useParams()
+const EditClientForm = ({clientId , type}) => {
+    // const {clientId} = useParams()
     const { user } = useAuthContext()
     const navigate = useNavigate()
 
@@ -243,13 +243,13 @@ const EditClientForm = () => {
         setIsSubmiting(true)
 
         if (formError===null ){
-            const toastId = toast.loading("Updating Customer...");
+            const toastId = toast.loading("Updating User...");
             var data = {}
             if (password) {
-                data = {name, userName, password, role:'client', isActive:active, isLoyal:loayal}
+                data = {name, userName, password, role:type, isActive:active, isLoyal:loayal}
             }
             else{
-                data = {name, userName, role:'client', isActive:active, isLoyal:loayal}
+                data = {name, userName, role:type, isActive:active, isLoyal:loayal}
             }
             
 
@@ -265,7 +265,7 @@ const EditClientForm = () => {
             const json = await response.json()
 
             if(response.ok){
-                toast.update(toastId, {render: "Customer Updated Succesfully", type: "success", isLoading: false, autoClose:4000});
+                toast.update(toastId, {render: "User Updated Succesfully", type: "success", isLoading: false, autoClose:4000});
             }
             else{
                 toast.update(toastId, {render: `${json.message}`, type: "error", isLoading: false, autoClose:4000});
@@ -345,17 +345,18 @@ const EditClientForm = () => {
                             <ConfirmPasswordField state={confirmPassword} setState={setConfirmPassword} password={password} setError={setConfirmPasswordError} error={confirmPasswordError} />
                         }
                     </div>
-                    <div className="form-line">
+                    { type === 'client' ?
+                     <div className="form-line">
                         {IsFetching ? <Skeleton animation='wave' height={60} width={'100%'} />:
                             <IsActiveField state={active} setState={setActive}/>
                         }
                         {IsFetching ? <Skeleton animation='wave' height={60} width={'100%'} />:
                             <IsLoyalField state={loayal} setState={setLoyal}/>
                         }
-                    </div>
+                    </div> : null}
                     <div className="form-line">
                         <div className="submit-wrapper">
-                            <button type="submit" >Update Client</button>
+                            <button type="submit" >Update</button>
                         </div>
                     </div>
                     {formError && IsSubmiting ? <div className="form-line">

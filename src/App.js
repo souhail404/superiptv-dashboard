@@ -46,7 +46,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={user==null ? <Login /> :<Home />} />
-              <Route path="my-profile" element={user==null ? <Login /> :<Profile />} />
+              <Route path="profile" element={user==null ? <Login /> :<Profile />} />
               <Route path="orders" >
                 <Route index element={user==null ? <Login /> :<ServersOrders />} />
                 <Route path="servers" element={user==null ? <Login /> :<ServersOrders />} />

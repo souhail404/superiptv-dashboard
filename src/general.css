@@ -979,3 +979,107 @@ label.checkbox-label.on div span{
 .basic-single-select .css-qbdosj-Input{
     color: var(--white);
 }
+
+
+/* NOTIFICATION DD */
+#notifications-menu .menu-container{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#notifications-menu .menu-container .notifications
+#notifications-menu .menu-container .action{
+    width: 100%;
+    text-transform: capitalize;
+}
+#notifications-menu .menu-container .action button{
+    width: 100%;
+    display: flex;
+    height: var(--size-xxl);
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 0;
+    text-transform: capitalize;
+    font-size: 16px;
+    color: var(--info);
+    cursor: pointer;
+    border-top: 1px solid #151e333e;
+    text-decoration: underline;
+}
+#notifications-menu .menu-container .notifications{
+    display: flex;
+    flex-direction: column;
+    max-height: 295px;
+    min-height: 240px;
+    overflow-y: scroll ;
+}
+#notifications-menu .menu-container .notifications::-webkit-scrollbar {
+    width: 8px;
+}
+
+#notifications-menu .menu-container .notifications::-webkit-scrollbar-track {
+    background: #151e3348; 
+}
+
+#notifications-menu .menu-container .notifications::-webkit-scrollbar-thumb {
+    background: #151e3366; 
+}
+#notifications-menu .menu-container .notifications::-webkit-scrollbar-thumb:hover {
+    background: #151e33a4; 
+}
+#notifications-menu .notification-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-xs);
+    padding-inline: var(--size-xs);
+    max-width: 320px;
+    border-bottom: 1px solid #151e33b6;
+    padding-block: var(--size-s);
+    padding-bottom: var(--size-s);
+    outline: none;
+    cursor: pointer;
+    line-height: 22px;
+    color: var(--blue-dark-1);
+    font-weight: 500;
+    background-color: #6f9adf66;
+}
+
+#notifications-menu .notification-wrapper.isSeen{
+    background-color: transparent;
+}
+#notifications-menu .notification-wrapper .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#notifications-menu .notification-wrapper .header .actions{
+    display: flex;
+    align-items: center;
+    gap: var(--size-xs);
+}
+#notifications-menu .notification-wrapper .header .actions button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 2px;
+    border: 1px solid var(--blue-notmal-1);
+    background-color: transparent;
+    color: var(--blue-notmal-1);
+}
+#notifications-menu .notification-wrapper .header .actions .icon{
+    font-size: 16px;
+}
+#notifications-menu .notification-wrapper .header p{
+    font-size: 14px;
+    text-decoration: underline;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#notifications-menu .notification-wrapper .content{
+    font-size: 16px;
+}

@@ -23,13 +23,13 @@ function ServersTable() {
     const [serversData, setServersData] = useState([]); 
     const [search, setSearch] =useState('');
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(7);
+    const [pageSize, setPageSize] =useState(9);
     const [totalPg, setTotalPg] = useState();
     const [serversCount, setServersCount] = useState();
 
     const {user} = useAuthContext()
     const navigate = useNavigate()
-    const [serachValue]=useDebounce(search, 500) 
+    const [searchValue]=useDebounce(search, 500) 
 
     const deleteServer = async(server, index)=>{
         const myheaders = new Headers();
@@ -86,7 +86,6 @@ function ServersTable() {
     const getServers = async()=>{
         try{
             setIsFetching(true)
-            setPage(1)
             const res = await fetch(`/api/server?page=${page}&pageSize=${pageSize}&search=${search}`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -111,7 +110,11 @@ function ServersTable() {
 
     useEffect(()=>{
         getServers()
-    },[page, serachValue])
+    },[page, searchValue])
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchValue]);
 
     return (
         <div className="table-wrapper1">

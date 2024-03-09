@@ -184,7 +184,7 @@ const PanelsOrdersTable = ({productId, userId, exFetching, heading, userFilter, 
     const [filterProduct, setFilterProduct] = useState(productId)
     const [stateFilter, setStateFilter] = useState('')
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(11);
+    const [pageSize, setPageSize] =useState(9);
     const [totalPg, setTotalPg] = useState();
     const [ordersCount, setOrdersCount] = useState();
 
@@ -195,7 +195,6 @@ const PanelsOrdersTable = ({productId, userId, exFetching, heading, userFilter, 
     const getOrders = async()=>{
         try{    
             setIsFetching(true)
-            setPage(1)
             const res = await fetch(`/api/order-panel?page=${page}&pageSize=${pageSize}&productId=${filterProduct}&userId=${filterUser}&state=${stateFilter}`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -247,6 +246,10 @@ const PanelsOrdersTable = ({productId, userId, exFetching, heading, userFilter, 
         }
     },[page, filterProduct, filterUser, exFetching, stateFilter])
 
+    useEffect(() => {
+        setPage(1);
+    }, [filterProduct, filterUser, exFetching, stateFilter]);
+    
     return (
         <div className="product-orders-container">
             <div className="table-wrapper1">

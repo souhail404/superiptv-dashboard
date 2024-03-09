@@ -1,12 +1,13 @@
-import * as React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import PersonIcon from '@mui/icons-material/Person';
-import LogoutIcon from '@mui/icons-material/Logout';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Badge, IconButton } from '@mui/material';
+import { Badge, IconButton, Skeleton } from '@mui/material';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import NotificationsMenu from './NotificationsMenu';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -25,7 +26,7 @@ const StyledMenu = styled((props) => (
   '& .MuiPaper-root': {
     borderRadius: 6,
     marginTop: theme.spacing(1),
-    minWidth: 180,
+    minWidth: 260,
     bgcolor:"#081124",  
     color:
       theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
@@ -51,7 +52,9 @@ const StyledMenu = styled((props) => (
 }));
 
 export default function CustomizedMenus() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  
+  const [anchorEl, setAnchorEl] = useState(null);
+  
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,38 +63,80 @@ export default function CustomizedMenus() {
     setAnchorEl(null);
   };
 
+  const {user} = useAuthContext()
+
+  const [page, setPage] =useState(1);
+  const [pageSize, setPageSize] =useState(8);
+  const [totalPages, setTotalPages] =useState(0);
+
+  const [isFetching, setIsFetching] = useState(false);
+  const [notificationsData, setNotificationsData] = useState([]); 
+  const [notifsCount, setNotifsCount] = useState(0);
+  const [unseenNotifsCount, setUnseenNotifsCount] = useState(0);
+
+
+  const getNotifications = async()=>{
+    try{
+        setIsFetching(true)
+        const res = await fetch(`/api/admin-notification?page=${page}&pageSize=${pageSize}`,{
+            headers: {
+                Authorization: `Bearer ${JSON.parse(user).token}`,
+            },
+        })
+        const response = await res.json();
+        if(res.ok){
+            const {notifications, totalPages , unSeenCount} = response;
+            setNotificationsData((prevNotifs) => [...prevNotifs,  ...notifications]);
+            setUnseenNotifsCount(unSeenCount);    
+            setTotalPages(totalPages)          
+        }
+        else{
+          toast.error(`error fetching notificatons :${response.message}`)
+        }
+        setIsFetching(false)
+    }catch(err){
+        console.log(err);
+        setIsFetching(false)
+    } 
+  }
+
+  useEffect(()=>{
+    getNotifications();
+  },[page])
+
   return (
     <div>
       <IconButton
         id="notif-dd-btn"
-        aria-controls={open ? 'demo-customized-menu' : undefined}
+        aria-controls={open ? 'notifications-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         disableElevation
         onClick={handleClick}
       >
-        <Badge badgeContent={2} overlap="circular" color="error" max={9}>
+        <Badge badgeContent={unseenNotifsCount} overlap="circular" color="error" max={9} showZero>
             <NotificationsIcon color="inherit" fontSize='inherit' />
         </Badge>
       </IconButton>
       <StyledMenu
-        id="demo-customized-menu"
+        id="notifications-menu"
         MenuListProps={{
-          'aria-labelledby': 'demo-customized-button',
+          'aria-labelledby': 'notif-dd-btn',
         }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose} disableRipple>
-          <PersonIcon />
-          profile
-        </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
-          <LogoutIcon />
-          Logout
-        </MenuItem>
+      > 
+        <div className="menu-container">
+          <NotificationsMenu page={page} setPage={setPage} totalPages={totalPages} open={open} notificationsData={notificationsData} isFetching={isFetching}/> 
+          <div className="action">
+              <button>see All</button>
+          </div>
+        </div> 
+        
       </StyledMenu>
     </div>
   );
 }
+
+

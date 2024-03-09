@@ -135,19 +135,19 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
     const [isValid, setIsValid] = useState('')
     const [search, setSearch] =useState('');
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(11);
+    const [pageSize, setPageSize] =useState(9);
     const [totalPg, setTotalPg] = useState(); 
     const [ordersCount, setOrdersCount] = useState();
 
     
     const {user} = useAuthContext()
-    const [serachValue]=useDebounce(search, 500) 
+    const [searchValue]=useDebounce(search, 500) 
 
 
     const getOrders = async()=>{
         try{    
             setIsFetching(true)
-            setPage(1)
+            
             const res = await fetch(`/api/order-server?page=${page}&pageSize=${pageSize}&productId=${filterProduct}&userId=${filterUser}&isValid=${isValid}&search=${search}`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -227,7 +227,11 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
         if (exFetching===true) {
             getOrders()
         }
-    },[page, filterProduct, filterUser, exFetching, isValid, serachValue])
+    },[page, filterProduct, filterUser, exFetching, isValid, searchValue])
+
+    useEffect(() => {
+        setPage(1);
+    }, [filterProduct, filterUser, isValid, searchValue]);
 
     return (
         <div className="product-orders-container">

@@ -23,13 +23,13 @@ function ServersTable() {
     const [search, setSearch] =useState('');
     const [category, setCategory] =useState('');
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(7);
+    const [pageSize, setPageSize] =useState(9);
     const [totalPg, setTotalPg] = useState();
     const [linksCount, setLinksCount] = useState();
 
     const {user} = useAuthContext()
     const navigate = useNavigate()
-    const [serachValue]=useDebounce(search, 500) 
+    const [searchValue]=useDebounce(search, 500) 
 
     const deleteLink = async(link, index)=>{
         const myheaders = new Headers();
@@ -38,7 +38,6 @@ function ServersTable() {
         myheaders.append('Authorization', `Bearer ${JSON.parse(user).token}`);
     
         const linkId = link._id;
-        console.log(linkId);
     
         const toastId = toast.loading(`Deleting Link : (${link.name})`);
         try {
@@ -87,8 +86,6 @@ function ServersTable() {
     const getLinks = async()=>{
         try{
             setIsFetching(true)
-
-            setPage(1)
             const res = await fetch(`/api/link?page=${page}&pageSize=${pageSize}&search=${search}&category=${category}`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -115,7 +112,11 @@ function ServersTable() {
 
     useEffect(()=>{
         getLinks()
-    },[page, serachValue, category])
+    },[page, searchValue, category])
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchValue, category]);
 
     return (
         <div className="table-wrapper1">

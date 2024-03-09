@@ -23,13 +23,13 @@ function PanelsTable() {
     const [panelsData, setPanelsData] = useState([]); 
     const [search, setSearch] =useState('');
     const [page, setPage] =useState(1);
-    const [pageSize, setPageSize] =useState(7);
+    const [pageSize, setPageSize] =useState(9);
     const [totalPg, setTotalPg] = useState();
     const [panelsCount, setPanelsCount] = useState();
 
     const {user} = useAuthContext()
     const navigate = useNavigate()
-    const [serachValue]=useDebounce(search, 500) 
+    const [searchValue]=useDebounce(search, 500) 
 
     const deletePanel = async(panel, index)=>{
         const myheaders = new Headers();
@@ -40,7 +40,6 @@ function PanelsTable() {
         const panelId = panel._id;
     
         const toastId = toast.loading(`Deleting panel : (${panel.title})`);
-        console.log(panelId);
         try {
             const res = await fetch(`/api/panel/${panelId}`, {
                 method:"DELETE",
@@ -87,7 +86,6 @@ function PanelsTable() {
     const getPanels = async()=>{
         try{
             setIsFetching(true)
-            setPage(1)
             const res = await fetch(`/api/panel?page=${page}&pageSize=${pageSize}&search=${search}`,{
                 headers: {
                     Authorization: `Bearer ${JSON.parse(user).token}`,
@@ -112,7 +110,11 @@ function PanelsTable() {
 
     useEffect(()=>{
         getPanels()
-    },[page, serachValue])
+    },[page, searchValue])
+
+    useEffect(() => {
+        setPage(1);
+    }, [searchValue]);
 
     return (
         <div className="table-wrapper1">
