@@ -831,8 +831,8 @@ label.checkbox-label.on div span{
 .confirm-alert1{
     width: 90vw;
     min-width: 230px;
-    max-width: 560px;
-    padding: var(--size-xxl);
+    max-width: 580px;
+    padding: var(--size-l);
     background: var(--white);
     border-radius: 0;
     box-shadow: 0 20px 75px rgba(0, 0, 0, 0.13);
@@ -884,6 +884,56 @@ label.checkbox-label.on div span{
     cursor: pointer;
 }
 
+.confirm-alert1 .details-wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-s);
+    max-height: 65vh;
+    overflow-y: scroll;
+}
+.confirm-alert1 .details-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.confirm-alert1 .details-wrapper::-webkit-scrollbar-track {
+    background: #151e3348; 
+}
+
+.confirm-alert1 .details-wrapper::-webkit-scrollbar-thumb {
+    background: #151e3366; 
+}
+.confirm-alert1 .details-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #151e33a4; 
+}
+.confirm-alert1 .details-wrapper .row{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: var(--size-s);
+}
+.confirm-alert1 .details-wrapper .details-elem{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--size-xs);
+    border: 1px solid #8080805d;
+    padding: var(--size-xs);
+    background-color: #80808033;
+}
+.confirm-alert1 .details-wrapper .details-elem h4{
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: underline;
+    text-transform: capitalize;
+}
+.confirm-alert1 .details-wrapper .details-elem p{
+    font-weight: 400;
+    font-size: 16px;
+}
 
 .box-intable412{
     width: min-content;
@@ -1012,9 +1062,10 @@ label.checkbox-label.on div span{
 #notifications-menu .menu-container .notifications{
     display: flex;
     flex-direction: column;
-    max-height: 295px;
+    max-height: 395px;
     min-height: 240px;
     overflow-y: scroll ;
+    overflow-x: hidden;
 }
 #notifications-menu .menu-container .notifications::-webkit-scrollbar {
     width: 8px;
@@ -1031,47 +1082,79 @@ label.checkbox-label.on div span{
     background: #151e33a4; 
 }
 #notifications-menu .notification-wrapper{
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr;
     gap: var(--size-xs);
-    padding-inline: var(--size-xs);
-    max-width: 320px;
+    max-width: 350px;
     border-bottom: 1px solid #151e33b6;
-    padding-block: var(--size-s);
-    padding-bottom: var(--size-s);
     outline: none;
-    cursor: pointer;
-    line-height: 22px;
     color: var(--blue-dark-1);
     font-weight: 500;
+    font-size: 16px;
     background-color: #6f9adf66;
+    padding-inline: var(--size-s);
 }
 
 #notifications-menu .notification-wrapper.isSeen{
     background-color: transparent;
 }
+
+#notifications-menu .notification-wrapper .col{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#notifications-menu .notification-wrapper .col.data{
+    padding-block: var(--size-s);
+}
+#notifications-menu .notification-wrapper .col.actions{
+    justify-content: center;    
+    gap: var(--size-s);
+    margin-left: 2px;
+}
+#notifications-menu .notification-wrapper .not-seen-mark{
+    width: 8px;
+    height: 8px;
+    background-color: var(--info);
+    border-radius: 50%;
+}
 #notifications-menu .notification-wrapper .header{
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    margin-top: var(--size-xs);
 }
-#notifications-menu .notification-wrapper .header .actions{
-    display: flex;
+#notifications-menu .notification-wrapper  .actions{
+    display: none;
     align-items: center;
     gap: var(--size-xs);
+    animation: slideLeft 0.2s ease;
 }
-#notifications-menu .notification-wrapper .header .actions button{
+@keyframes slideLeft {
+    0%{
+      transform: translateX(50%);
+    }
+    100%{
+      transform: translateX(0);
+    }
+  }
+#notifications-menu .notification-wrapper:hover .actions{
+    display: flex;
+}
+#notifications-menu .notification-wrapper  .actions button{
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    border-radius: 4px;
     padding: 2px;
     border: 1px solid var(--blue-notmal-1);
     background-color: transparent;
     color: var(--blue-notmal-1);
+    cursor: pointer;
 }
 #notifications-menu .notification-wrapper .header .actions .icon{
-    font-size: 16px;
+    font-size: 8px;
 }
 #notifications-menu .notification-wrapper .header p{
     font-size: 14px;
@@ -1081,5 +1164,5 @@ label.checkbox-label.on div span{
     justify-content: space-between;
 }
 #notifications-menu .notification-wrapper .content{
-    font-size: 16px;
+    font-size: 15px;
 }

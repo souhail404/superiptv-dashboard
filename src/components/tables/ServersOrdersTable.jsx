@@ -10,6 +10,8 @@ import Select from 'react-select';
 import { useDebounce } from 'use-debounce';
 import SearchIcon from '@mui/icons-material/Search';
 import CopyText from '../CopyText';
+import { confirmAlert } from 'react-confirm-alert';
+import ViewOrderDetailsAlert from '../ViewOrderDetailsAlert';
 
 
 const FilterByUser  = ({setFilterUser, placeholder})=>{
@@ -171,26 +173,6 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
         } 
     }
 
-    const makeOrderSeen = async(c)=>{
-        try{
-            const res = await fetch(`/api/order-server/seen/${c._id}`,{
-                method:'PUT',
-                headers: {
-                    Authorization: `Bearer ${JSON.parse(user).token}`,
-                },
-            })
-            const response = await res.json();
-            if(res.ok){
-                toast.success(`Order Updated Successfully`)
-            }
-            else{
-              toast.error(`${response.message}`)
-            }
-        }catch(err){
-            console.log(err);
-            toast.error(`Error Updating`)
-        } 
-    }
 
     const updateOrderValidation = async(orderId, value, index)=>{
         
@@ -222,6 +204,23 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
             console.log(err);
         }
     }
+
+    const handleViewDetailsClick = async(order, index)=>{   
+        confirmAlert({
+            customUI: ({ onClose }) => {
+              return (
+                <ViewOrderDetailsAlert 
+                    onClose={onClose} 
+                    order={order} 
+                    index={index}
+                    user={user}
+                    product='server'
+                    />
+              );
+            }
+        });
+       
+    };
 
     useEffect(()=>{
         if (exFetching===true) {
@@ -298,7 +297,7 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
                                     </td>
                                     <td data-cell="actions" className='actions-column'>
                                         <div className="actions-cell">
-                                        <button className='action btn-round' type="button" onClick={()=>makeOrderSeen(c)} >
+                                        <button className='action btn-round' type="button" onClick={()=>handleViewDetailsClick(c, index)} >
                                             <RemoveRedEyeOutlinedIcon className='icon' />
                                         </button>
                                         </div>

@@ -66,7 +66,7 @@ export default function CustomizedMenus() {
   const {user} = useAuthContext()
 
   const [page, setPage] =useState(1);
-  const [pageSize, setPageSize] =useState(8);
+  const [pageSize, setPageSize] =useState(6);
   const [totalPages, setTotalPages] =useState(0);
 
   const [isFetching, setIsFetching] = useState(false);
@@ -129,9 +129,9 @@ export default function CustomizedMenus() {
       > 
         <div className="menu-container">
           <NotificationsMenu page={page} setPage={setPage} totalPages={totalPages} open={open} notificationsData={notificationsData} isFetching={isFetching}/> 
-          <div className="action">
+          {/* <div className="action">
               <button>see All</button>
-          </div>
+          </div> */}
         </div> 
         
       </StyledMenu>

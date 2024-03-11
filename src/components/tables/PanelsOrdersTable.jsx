@@ -7,6 +7,8 @@ import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import formatDate from '../../services/formatDate';
 import Pagination from '../Pagination';
 import Select from 'react-select';
+import { confirmAlert } from 'react-confirm-alert';
+import ViewPanelOrderDetailsAlert from '../ViewPanelOrderDetailsAlert';
 
 
 const OrderStateSelect  = ({c})=>{
@@ -218,26 +220,21 @@ const PanelsOrdersTable = ({productId, userId, exFetching, heading, userFilter, 
         } 
     }
 
-    const makeOrderSeen = async(c)=>{
-        try{
-            const res = await fetch(`/api/order-panel/seen/${c._id}`,{
-                method:'PUT',
-                headers: {
-                    Authorization: `Bearer ${JSON.parse(user).token}`,
-                },
-            })
-            const response = await res.json();
-            if(res.ok){
-                toast.success(`Order Updated Successfully`)
+    const handleViewDetailsClick = async(order, index)=>{   
+        confirmAlert({
+            customUI: ({ onClose }) => {
+              return (
+                <ViewPanelOrderDetailsAlert 
+                    onClose={onClose} 
+                    order={order} 
+                    index={index}
+                    user={user}
+                    />
+              );
             }
-            else{
-              toast.error(`${response.message}`)
-            }
-        }catch(err){
-            console.log(err);
-            toast.error(`Error Updating`)
-        } 
-    }
+        });
+       
+    };
 
 
     useEffect(()=>{
@@ -299,7 +296,7 @@ const PanelsOrdersTable = ({productId, userId, exFetching, heading, userFilter, 
                                     </td>
                                     <td data-cell="actions" className='actions-column'>
                                         <div className="actions-cell">
-                                        <button className='action btn-round' type="button" onClick={()=>makeOrderSeen(c)} >
+                                        <button className='action btn-round' type="button" onClick={()=>handleViewDetailsClick(c, index)} >
                                             <RemoveRedEyeOutlinedIcon className='icon' />
                                         </button>
                                         </div>
