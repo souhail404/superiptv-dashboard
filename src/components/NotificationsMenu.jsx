@@ -1,11 +1,13 @@
 import { Skeleton } from '@mui/material'
 import React, { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
-import formatDate from '../services/formatDate';
+import formatDateAgo from '../services/formatDateAgo';
 
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
+import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 
 const NotificationsMenu = ({page, setPage, totalPages, open, notificationsData, isFetching}) => {
 
@@ -42,23 +44,29 @@ const NotificationsMenu = ({page, setPage, totalPages, open, notificationsData, 
                 notificationsData.map((notif, index)=>{
                     return(
                     <div key={index}  className={`notification-wrapper ${notif.isSeen ? 'isSeen' :''}`}>
+                        <div className='col icon'>
+                            <div className={`notif-icon ${notif.type}`}>
+                                {notif && notif.type==="order" ? <AttachMoneyOutlinedIcon fontSize='small'/> : null}
+                                {notif && notif.type==="stock" ? <PriorityHighOutlinedIcon fontSize='small'/> : null}
+                            </div>
+                        </div>
                         <div className='col data'>
                             <div className="content">
                                 <p>{notif.content} </p>
                             </div>
-                            <div className="header">
-                                <p>{ formatDate(notif.createdAt) }</p>
+                            <div className="date-act">
+                                <p>{ formatDateAgo(notif.createdAt) }</p>
+
+                                <div className='actions'>   
+                                    <button type="button" className='see' onClick={()=>{navigate(notif.link)}}>
+                                        <p>View</p>
+                                    </button>
+                                    <button type="button" className='delete' > 
+                                        <p>delete</p>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div className='col actions'>   
-                            <button type="button" onClick={()=>{navigate(notif.link)}}>
-                                <RemoveRedEyeOutlinedIcon className='icon' fontSize='small' />
-                            </button>
-                            <button type="button" > 
-                                <DeleteOutlineOutlinedIcon className='icon' fontSize='small' />
-                            </button>
-                        </div>
-                        
+                        </div>            
                     </div>
                     )
                 })
