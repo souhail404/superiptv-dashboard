@@ -8,7 +8,7 @@ import SideNav from '../components/SideNav';
 
 
 const Layout = () => {
-  const { user } = useAuthContext()
+  const { user } = useAuthContext();
 
   return (
     <>    

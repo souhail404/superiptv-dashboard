@@ -189,7 +189,7 @@ const AddServerForm = () => {
             formData.append('image', image); 
 
             // Handle arrays
-            const codesArray = codes.length > 0 ? codes.split(/\n/) : [];
+            const codesArray = codes?.length > 0 ? codes.split(/\n/) : [];
             // Remove empty strings from the codesArray
             const filteredCodesArray = codesArray.filter(code => code.trim() !== "");
 

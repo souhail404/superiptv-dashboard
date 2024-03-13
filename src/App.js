@@ -1,10 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Orders from "./pages/orders/Orders";
 import Servers from "./pages/server/Servers";
 import EditServer from "./pages/server/EditServer";
 import AddServer from "./pages/server/AddServer";
@@ -22,10 +20,6 @@ import Panels from "./pages/panels/Panels";
 import AddPanel from "./pages/panels/AddPanel";
 import EditPanel from "./pages/panels/EditPanel";
 import PanelDetails from "./pages/panels/PanelDetails";
-
-// hooks
-import { useAuthContext } from "./hooks/useAuthContext";
-import { ToastContainer } from 'react-toastify';
 import ServersOrders from "./pages/orders/ServersOrders";
 import CodesOrders from "./pages/orders/CodesOrders";
 import PanelsOrders from "./pages/orders/PanelsOrders";
@@ -34,11 +28,40 @@ import AddLink from "./pages/link/AddLink";
 import EditLink from "./pages/link/EditLink";
 import Profile from "./pages/Profile";
 
+// dependencies
+import { jwtDecode }  from 'jwt-decode';
+import { useEffect } from "react";
+import { useLogout } from "./hooks/useLogout";
+import { useAuthContext } from "./hooks/useAuthContext";
+import { ToastContainer } from 'react-toastify';
 
-
+ 
 
 function App() {
   const { user } = useAuthContext()
+  const { logout } = useLogout()
+
+  const isTokenExpired = () => {
+    const userP = JSON.parse(user)
+    if (!userP?.token) {
+        console.log('here');
+        return true;
+    }
+
+    try {
+        const decodedToken = jwtDecode(userP?.token);
+        const currentTime = Date.now() / 1000;
+        return decodedToken.exp < currentTime;
+    } catch (error) {
+        return true;
+    }
+  };
+
+  useEffect(() => {
+    if (isTokenExpired()) {
+        logout();
+    }
+  }, []);
 
   return (
     <div id="app">

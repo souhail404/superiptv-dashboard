@@ -36,7 +36,7 @@ const StyledMenu = styled((props) => (
       padding: '4px 0',
     },
     '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
+      '& .MuiSvgIcon-root': { 
         fontSize: 18,
         color: theme.palette.text.secondary,
         marginRight: theme.spacing(1.5),
@@ -128,7 +128,16 @@ export default function CustomizedMenus() {
         onClose={handleClose}
       > 
         <div className="menu-container">
-          <NotificationsMenu page={page} setPage={setPage} totalPages={totalPages} open={open} notificationsData={notificationsData} isFetching={isFetching}/> 
+          <NotificationsMenu page={page} 
+                    setPage={setPage} 
+                    totalPages={totalPages} 
+                    open={open} 
+                    notificationsData={notificationsData} 
+                    isFetching={isFetching} 
+                    setNotificationsData={setNotificationsData}
+                    handleClose={handleClose}
+                    setUnseenNotifsCount={setUnseenNotifsCount}
+                    unseenNotifsCount={unseenNotifsCount}/> 
           {/* <div className="action">
               <button>see All</button>
           </div> */}

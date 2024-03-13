@@ -3,16 +3,27 @@ import React, { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import formatDateAgo from '../services/formatDateAgo';
 
-import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { toast } from 'react-toastify';
 
-const NotificationsMenu = ({page, setPage, totalPages, open, notificationsData, isFetching}) => {
+const NotificationsMenu = ({
+        page, 
+        setPage, 
+        totalPages, 
+        open, 
+        notificationsData, 
+        isFetching, 
+        setNotificationsData, 
+        handleClose,
+        setUnseenNotifsCount,
+        unseenNotifsCount
+    }) => {
 
     const ref = useRef();
     const navigate = useNavigate()
+    const {user} = useAuthContext()
     
     const handleScroll = async () => {
         const notifWrapper = ref.current;
@@ -24,6 +35,59 @@ const NotificationsMenu = ({page, setPage, totalPages, open, notificationsData, 
             }
         }
     };
+
+
+    const handleSeeClick = async(notif , index)=>{
+        navigate(notif.link);
+        handleClose();
+        if(notif.isSeen === false){
+            try{
+                const res = await fetch(`/api/admin-notification/seen/${notif._id}`,{
+                    method:'PUT',
+                    headers: {
+                        Authorization: `Bearer ${JSON.parse(user).token}`,
+                    },
+                })
+                const response = await res.json();
+                if(res.ok){
+                    const updatedData = [...notificationsData];
+                    updatedData[index].isSeen = true;
+                    
+                    // setUnseenNotifsCount(unseenNotifsCount - 1)
+                    setNotificationsData([...updatedData])
+                }
+                else{
+                toast.error(`${response.message}`)
+                }
+            }catch(err){
+                console.log(err);
+                toast.error(`Error Updating Notification State`)
+            }  
+        }
+    }
+
+    const handleDelClick = async(notif , index)=>{
+        try{
+            const res = await fetch(`/api/admin-notification/${notif._id}`,{
+                method:'DELETE',
+                headers: {
+                    Authorization: `Bearer ${JSON.parse(user).token}`,
+                },
+            })
+            const response = await res.json();
+            if(res.ok){
+                const updatedData =[...notificationsData];
+                updatedData.splice(index, 1)
+                setNotificationsData(updatedData)
+            }
+            else{
+              toast.error(`${response.message}`)
+            }
+        }catch(err){
+            console.log(err);
+            toast.error(`Error Deleting Notification`)
+        } 
+    }
 
     useEffect(() => {
         if (open && !isFetching) { 
@@ -58,10 +122,10 @@ const NotificationsMenu = ({page, setPage, totalPages, open, notificationsData, 
                                 <p>{ formatDateAgo(notif.createdAt) }</p>
 
                                 <div className='actions'>   
-                                    <button type="button" className='see' onClick={()=>{navigate(notif.link)}}>
+                                    <button type="button" className='see' onClick={()=>{handleSeeClick(notif, index)}}>
                                         <p>View</p>
                                     </button>
-                                    <button type="button" className='delete' > 
+                                    <button type="button" className='delete' onClick={()=>{handleDelClick(notif, index)}}> 
                                         <p>delete</p>
                                     </button>
                                 </div>

@@ -1096,7 +1096,7 @@ label.checkbox-label.on div span{
 }
 
 #notifications-menu .notification-wrapper.isSeen{
-    background-color: transparent;
+    background-color: #a9c0e666;
 }
 
 #notifications-menu .notification-wrapper .col{

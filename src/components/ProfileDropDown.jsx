@@ -84,7 +84,7 @@ export default function CustomizedMenus() {
         }}
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={handleClose} 
       >
         <MenuItem onClick={()=>{handleClose(); navigate(`profile`)}} disableRipple>
           <PersonIcon />
