@@ -12,9 +12,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import CopyText from '../CopyText';
 import { confirmAlert } from 'react-confirm-alert';
 import ViewOrderDetailsAlert from '../ViewOrderDetailsAlert';
+import DataObjectIcon from '@mui/icons-material/DataObject';
+import EditOrderCodeAlert from '../EditOrderCodeAlert';
 
 
-const FilterByUser  = ({setFilterUser, placeholder})=>{
+const FilterByUser  = ({setFilterUser, placeholder})=>{ 
     const [isFetching, setIsFetching] = useState(false);
     const [users , setUsers] = useState();
     const [options, setOptions] = useState([]);
@@ -222,6 +224,25 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
        
     };
 
+    const handleEditCodeClick = async(order, index)=>{   
+        confirmAlert({
+            customUI: ({ onClose }) => {
+              return (
+                <EditOrderCodeAlert 
+                    onClose={onClose} 
+                    order={order} 
+                    index={index}
+                    user={user}
+                    product='server'
+                    setOrdersData={setOrdersData}
+                    ordersData={ordersdata}
+                    />
+              );
+            }
+        });
+       
+    };
+
     useEffect(()=>{
         if (exFetching===true) {
             getOrders()
@@ -297,6 +318,9 @@ const ServersOrdersTable = ({productId, userId, exFetching, heading, userFilter,
                                     </td>
                                     <td data-cell="actions" className='actions-column'>
                                         <div className="actions-cell">
+                                        <button className='action btn-round' type="button" onClick={()=>handleEditCodeClick(c, index)} >
+                                            <DataObjectIcon className='icon' />
+                                        </button>
                                         <button className='action btn-round' type="button" onClick={()=>handleViewDetailsClick(c, index)} >
                                             <RemoveRedEyeOutlinedIcon className='icon' />
                                         </button>

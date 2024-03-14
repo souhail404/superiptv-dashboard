@@ -859,6 +859,12 @@ label.checkbox-label.on div span{
     display: grid;
     grid-template-columns: 140px 1fr;
 }
+.confirm-alert1 .input-wrapper.onefr{
+    width: 100%;
+    margin-top: var(--size-m);
+    display: grid;
+    grid-template-columns: 1fr;
+}
 .confirm-alert1 .input-wrapper select{
 
 }

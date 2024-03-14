@@ -29,7 +29,7 @@ const ViewOrderDetailsAlert = ({onClose, order, user, product}) => {
     useEffect(()=>{
         if(order.isSeen === false){
             makeOrderSeen()
-        }
+        } 
     }, [])
 
     return (
