@@ -5,13 +5,13 @@ import './general.css';
 import App from './App';
 
 import { AuthContextProvider } from './context/AuthContext';
-import { SidebarContextProvider } from './context/SidebarContext';
+import { ShopProvider } from './context/ShopContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <AuthContextProvider>
-        <SidebarContextProvider>
+        <ShopProvider>
             <App />
-        </SidebarContextProvider>
+        </ShopProvider>
     </AuthContextProvider> 
 );

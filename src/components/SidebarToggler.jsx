@@ -1,21 +1,17 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import { IconButton } from '@mui/material';
-import { useSidebarContext } from "../hooks/useSidebarContext";
-import { useToggleSidebar } from '../hooks/useToggleSidebar';
+import { useShop } from '../context/ShopContext'
 
 
 const SidebarToggler = () => {
-    const {isSidebarOpen} = useSidebarContext()
-    const {toggleSidebar} = useToggleSidebar()
-
-    console.log(isSidebarOpen);
-
+    const { shopData, updateShopData } = useShop();
+    
     return (
         <div className='sidebar-toggler-wrapper'>
             <IconButton
                 id="sidebar-toggler-btn"
-                onClick={()=>{toggleSidebar()}}
+                onClick={()=>{updateShopData({isNavBarOpen:!shopData.isNavBarOpen})}}
             >
                 <MenuOpenIcon fontSize='inherit' color='inherit' />
             </IconButton>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import HeaderLogo from './HeaderLogo'
-import { useSidebarContext } from '../hooks/useSidebarContext'
+import { useShop } from '../context/ShopContext'
 import { Link, useLocation } from 'react-router-dom'
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -13,20 +13,14 @@ import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import LinkIcon from '@mui/icons-material/Link';
 import { useAuthContext } from '../hooks/useAuthContext';
+// import { useSidebarContext } from '../hooks/useSidebarContext';
 
 const Sidenav = () => {
-  const {isSidebarOpen} = useSidebarContext()
-  // const [location , setLocation] = useState()
-  let currentLocationn = useLocation();
-  const {user} = useAuthContext()
+  // const {isSidebarOpen} = useSidebarContext();
+  const { shopData, updateShopData } = useShop();
 
-  const [location , setLocation] = useState(currentLocationn.pathname.split('/')[1] || '')
-  const [ordersLength , setOrdersLength ] = useState({
-    server:'',
-    code:'',
-    panel:'',
-    total:''
-  })
+  let currentLocation = useLocation();
+  const {user} = useAuthContext()
 
   const getOrdersLength = async() =>{
     try{
@@ -38,11 +32,12 @@ const Sidenav = () => {
       const response = await res.json();
       if(res.ok){
         const {serverOrdersLength, codeOrdersLength , panelOrdersLength, totalOrdersLength} = response;
-        setOrdersLength({
-          server:serverOrdersLength,
-          code:codeOrdersLength,
-          panel:panelOrdersLength,
-          total:totalOrdersLength
+        updateShopData({ 
+          codeOrdersCount:codeOrdersLength,
+          serverOrdersCount:serverOrdersLength,
+          panelOrdersCount:panelOrdersLength,
+          totalOrdersCount:totalOrdersLength,
+          activeTab:currentLocation.pathname.split('/')[1] || '',
         });
       }
     }catch(err){
@@ -55,52 +50,52 @@ const Sidenav = () => {
   },[])
 
   return (
-    <nav id='sidenav' className={isSidebarOpen ? 'open': 'close'}>
+    <nav id='sidenav' className={shopData.isNavBarOpen ? 'open' : 'close'} >
         <div className="sidebar-container">
             <div className="sidebar-header">
               <HeaderLogo />
             </div>
             <div className="sidebar-nav">
               <div className="sidebar-nav-wrapper">
-                <Link to={'/'} onClick={()=>{setLocation('')}} className={`side-bar-elem ${location==='' ?"active" : ''}`} >
+                <Link to={'/'} onClick={()=>{updateShopData({activeTab:''})}} className={`side-bar-elem ${shopData.activeTab==='' ?"active" : ''}`} >
                   <div className="elem-link2">
                     <DashboardOutlinedIcon className='mean-icon' />
                     <p>Dashboard</p>
                   </div>
                 </Link>
-                <div onClick={()=>{setLocation('orders')}} className={`side-bar-elem ${location==='orders' ?"active" : ''}`}>
+                <div onClick={()=>{updateShopData({activeTab:'orders'})}} className={`side-bar-elem ${shopData.activeTab==='orders' ?"active" : ''}`}>
                   <div className="elem-link2">
                     <ShoppingCartOutlinedIcon className='mean-icon' />
                     <p>orders</p>
-                    {ordersLength.total? <div className='right-badge'>{ordersLength.total}</div> : ''}
-                    {location==='orders' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
+                    {shopData.totalOrdersCount? <div className='right-badge'>{shopData.totalOrdersCount}</div> : ''}
+                    {shopData.activeTab==='orders' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
                   </div>
                   {
-                    location==='orders' ? 
+                    shopData.activeTab==='orders' ? 
                     <div className="elem-menu">
                       <Link to={`orders/servers`} className="elem-link2 in-menu">
                         <p>servers</p>
-                        {ordersLength.server? <div className='right-badge'>{ordersLength.server}</div> : ''}
+                        {shopData.serverOrdersCount? <div className='right-badge'>{shopData.serverOrdersCount}</div> : ''}
                       </Link>
                       <Link to={`orders/codes`} className="elem-link2 in-menu">
                         <p>codes </p>
-                        {ordersLength.code? <div className='right-badge'>{ordersLength.code}</div> : ''}
+                        {shopData.codeOrdersCount? <div className='right-badge'>{shopData.codeOrdersCount}</div> : ''}
                       </Link>
                       <Link to={`orders/panels`} className="elem-link2 in-menu">
                         <p>panels</p>
-                        {ordersLength.panel? <div className='right-badge'>{ordersLength.panel}</div> : ''}
+                        {shopData.panelOrdersCount? <div className='right-badge'>{shopData.panelOrdersCount}</div> : ''}
                       </Link>
                     </div> : null
                   }
                 </div>
-                <div onClick={()=>{setLocation('servers')}} className={`side-bar-elem ${location==='servers' ?"active" : ''}`}>
+                <div onClick={()=>{updateShopData({activeTab:'servers'})}} className={`side-bar-elem ${shopData.activeTab==='servers' ?"active" : ''}`}>
                   <div className="elem-link2">
                     <DvrOutlinedIcon className='mean-icon' />
                     <p>servers</p>
-                    {location==='servers' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
+                    {shopData.activeTab==='servers' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
                   </div>
                   {
-                    location==='servers' ? 
+                    shopData.activeTab==='servers' ? 
                     <div className="elem-menu">
                       <Link to={`servers`} className="elem-link2 in-menu">
                         <p>All servers</p>
@@ -111,14 +106,14 @@ const Sidenav = () => {
                     </div> : null
                   }
                 </div>
-                <div onClick={()=>{setLocation('codes')}} className={`side-bar-elem ${location==='codes' ?"active" : ''}`}>
+                <div onClick={()=>{updateShopData({activeTab:'codes'})}} className={`side-bar-elem ${shopData.activeTab==='codes' ?"active" : ''}`}>
                   <div className="elem-link2">
                     <ConnectedTvIcon className='mean-icon' />
                     <p>codes</p>
-                    {location==='codes' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
+                    {shopData.activeTab==='codes' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
                   </div>
                   {
-                    location==='codes' ? 
+                    shopData.activeTab==='codes' ? 
                     <div className="elem-menu">
                       <Link to={`codes`} className="elem-link2 in-menu">
                         <p>All codes</p>
@@ -129,14 +124,14 @@ const Sidenav = () => {
                     </div> : null
                   }
                 </div>
-                <div onClick={()=>{setLocation('panels')}} className={`side-bar-elem ${location==='panels' ?"active" : ''}`}>
+                <div onClick={()=>{updateShopData({activeTab:'panels'})}} className={`side-bar-elem ${shopData.activeTab==='panels' ?"active" : ''}`}>
                   <div className="elem-link2">
                     <LiveTvOutlinedIcon className='mean-icon' />
                     <p>panels</p>
-                    {location==='panels' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
+                    {shopData.activeTab==='panels' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
                   </div>
                   {
-                    location==='panels' ? 
+                    shopData.activeTab==='panels' ? 
                     <div className="elem-menu">
                       <Link to={`panels`} className="elem-link2 in-menu">
                         <p>All panels</p>
@@ -147,14 +142,14 @@ const Sidenav = () => {
                     </div> : null
                   }
                 </div>
-                <div onClick={()=>{setLocation('client')}} className={`side-bar-elem ${location==='client' ?"active" : ''}`}>
+                <div onClick={()=>{updateShopData({activeTab:'client'})}} className={`side-bar-elem ${shopData.activeTab==='client' ?"active" : ''}`}>
                   <div className="elem-link2">
                     <PeopleAltOutlinedIcon className='mean-icon' />
                     <p>Client</p>
-                    {location==='client' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
+                    {shopData.activeTab==='client' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
                   </div>
                   {
-                    location==='client' ? 
+                    shopData.activeTab==='client' ? 
                     <div className="elem-menu">
                       <Link to={`client`} className="elem-link2 in-menu">
                         <p>All Clients</p>
@@ -166,14 +161,14 @@ const Sidenav = () => {
                   }
       
                 </div>
-                <div onClick={()=>{setLocation('link')}} className={`side-bar-elem ${location==='link' ?"active" : ''}`}>
+                <div onClick={()=>{updateShopData({activeTab:'link'})}} className={`side-bar-elem ${shopData.activeTab==='link' ?"active" : ''}`}>
                   <div className="elem-link2">
                     <LinkIcon className='mean-icon' />
                     <p>links</p>
-                    {location==='link' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
+                    {shopData.activeTab==='link' ? <KeyboardArrowUpOutlinedIcon className='dd-icon' /> : <KeyboardArrowDownIcon className='dd-icon' />}
                   </div>
                   {
-                    location==='link' ? 
+                    shopData.activeTab==='link' ? 
                     <div className="elem-menu">
                       <Link to={`link`} className="elem-link2 in-menu">
                         <p>All links</p>

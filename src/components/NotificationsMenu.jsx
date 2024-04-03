@@ -7,6 +7,7 @@ import PriorityHighOutlinedIcon from '@mui/icons-material/PriorityHighOutlined';
 import AttachMoneyOutlinedIcon from '@mui/icons-material/AttachMoneyOutlined';
 import { useAuthContext } from '../hooks/useAuthContext';
 import { toast } from 'react-toastify';
+import { useShop } from '../context/ShopContext';
 
 const NotificationsMenu = ({
         page, 
@@ -17,13 +18,13 @@ const NotificationsMenu = ({
         isFetching, 
         setNotificationsData, 
         handleClose,
-        setUnseenNotifsCount,
-        unseenNotifsCount
     }) => {
 
     const ref = useRef();
     const navigate = useNavigate()
     const {user} = useAuthContext()
+    const { shopData, updateShopData } = useShop();
+
     
     const handleScroll = async () => {
         const notifWrapper = ref.current;
@@ -40,6 +41,7 @@ const NotificationsMenu = ({
     const handleSeeClick = async(notif , index)=>{
         navigate(notif.link);
         handleClose();
+
         if(notif.isSeen === false){
             try{
                 const res = await fetch(`/api/admin-notification/seen/${notif._id}`,{
@@ -53,8 +55,8 @@ const NotificationsMenu = ({
                     const updatedData = [...notificationsData];
                     updatedData[index].isSeen = true;
                     
-                    // setUnseenNotifsCount(unseenNotifsCount - 1)
                     setNotificationsData([...updatedData])
+                    updateShopData({notifCount:shopData.notifCount - 1})
                 }
                 else{
                 toast.error(`${response.message}`)
@@ -91,7 +93,6 @@ const NotificationsMenu = ({
 
     useEffect(() => {
         if (open && !isFetching) { 
-            console.log(page);
             if (ref && ref.current) {
                 ref.current.addEventListener("scroll", handleScroll, false);
                 return function cleanup() {
@@ -99,6 +100,7 @@ const NotificationsMenu = ({
                 };
             }
         }
+
     }, [open, page]);
 
     return (
@@ -106,6 +108,7 @@ const NotificationsMenu = ({
             {
                 notificationsData ? 
                 notificationsData.map((notif, index)=>{
+                    console.log(notif);
                     return(
                     <div key={index}  className={`notification-wrapper ${notif.isSeen ? 'isSeen' :''}`}>
                         <div className='col icon'>

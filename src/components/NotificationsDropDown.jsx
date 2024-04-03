@@ -8,6 +8,7 @@ import { useAuthContext } from '../hooks/useAuthContext';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import NotificationsMenu from './NotificationsMenu';
+import { useShop } from '../context/ShopContext';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -64,6 +65,8 @@ export default function CustomizedMenus() {
   };
 
   const {user} = useAuthContext()
+  const { shopData, updateShopData } = useShop();
+
 
   const [page, setPage] =useState(1);
   const [pageSize, setPageSize] =useState(6);
@@ -71,8 +74,6 @@ export default function CustomizedMenus() {
 
   const [isFetching, setIsFetching] = useState(false);
   const [notificationsData, setNotificationsData] = useState([]); 
-  const [notifsCount, setNotifsCount] = useState(0);
-  const [unseenNotifsCount, setUnseenNotifsCount] = useState(0);
 
 
   const getNotifications = async()=>{
@@ -87,7 +88,7 @@ export default function CustomizedMenus() {
         if(res.ok){
             const {notifications, totalPages , unSeenCount} = response;
             setNotificationsData((prevNotifs) => [...prevNotifs,  ...notifications]);
-            setUnseenNotifsCount(unSeenCount);    
+            updateShopData({notifCount:unSeenCount});    
             setTotalPages(totalPages)          
         }
         else{
@@ -114,7 +115,7 @@ export default function CustomizedMenus() {
         disableElevation
         onClick={handleClick}
       >
-        <Badge badgeContent={unseenNotifsCount} overlap="circular" color="error" max={9} showZero>
+        <Badge badgeContent={shopData.notifCount} overlap="circular" color="error" max={9} showZero>
             <NotificationsIcon color="inherit" fontSize='inherit' />
         </Badge>
       </IconButton>
@@ -136,11 +137,7 @@ export default function CustomizedMenus() {
                     isFetching={isFetching} 
                     setNotificationsData={setNotificationsData}
                     handleClose={handleClose}
-                    setUnseenNotifsCount={setUnseenNotifsCount}
-                    unseenNotifsCount={unseenNotifsCount}/> 
-          {/* <div className="action">
-              <button>see All</button>
-          </div> */}
+                  /> 
         </div> 
         
       </StyledMenu>
